@@ -1,0 +1,97 @@
+﻿name: inventory-hold
+
+# docker-compose up --build
+#   UI         http://localhost:5173
+#   API        http://localhost:8080   (Swagger at /swagger, health at /health)
+#   RabbitMQ   http://localhost:15672
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/InventoryHold.WebApi/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      # Every setting in appsettings.json can be overridden here (Section__Key).
+      Mongo__ConnectionString: mongodb://mongo:27017/?replicaSet=rs0
+      Mongo__Database: inventory_hold
+      Redis__ConnectionString: redis:6379
+      RabbitMq__Uri: amqp://${RABBITMQ_USER:-inventory}:${RABBITMQ_PASSWORD:-inventory-secret}@rabbitmq:5672
+      Holds__DurationMinutes: ${HOLD_DURATION_MINUTES:-15}
+      Cors__AllowedOrigins__0: http://localhost:5173
+      Swagger__Enabled: "true"
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Single-node replica set: required for multi-document transactions.
+  mongo:
+    image: mongo:8.0
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # Initiates the replica set on first run, then reports healthy once this node is primary.
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - "try { rs.status() } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }] }) }; if (!db.hello().isWritablePrimary) quit(1)"
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-inventory}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-inventory-secret}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    restart: unless-stopped
+
+  # nginx serves the built SPA and proxies /api to the API container, so the browser
+  # talks to a single origin and no API URL is baked into the bundle.
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
+  rabbitmq-data:

@@ -1,0 +1,73 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  color: #1f2937;
+  background: #f4f6fa;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1100px; margin: 0 auto; padding: 36px 24px; }
+header { margin-bottom: 24px; }
+.eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #64748b; margin: 0 0 8px; }
+h1 { font-size: 34px; letter-spacing: -1px; margin: 0; }
+h2 { font-size: 18px; margin: 0 0 20px; }
+.sub { color: #64748b; margin: 8px 0 0; }
+.muted { color: #64748b; }
+
+.panel { background: white; border: 1px solid #e5eaf1; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 18px #1e293b08; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.panel-head h2 { margin: 0; }
+.columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+
+.products { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.product { border: 1px solid #e8edf4; border-radius: 12px; padding: 16px; min-height: 112px; }
+.product.low { border-color: #f5c46b; background: #fffaf0; }
+.product.out { border-color: #f3b4ae; background: #fff5f4; }
+.product.out .stock { color: #b42318; }
+.skeleton { background: linear-gradient(90deg, #f1f5f9 25%, #e8edf4 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.sku { font-size: 11px; color: #64748b; }
+.product h3 { font-size: 14px; margin: 10px 0 16px; }
+.stock { font-size: 27px; font-weight: 750; }
+.stock small { font-size: 12px; color: #64748b; font-weight: 400; }
+
+label { display: block; font-size: 13px; font-weight: 650; }
+input, select { display: block; width: 100%; padding: 10px 12px; margin-top: 6px; border: 1px solid #d7deea; border-radius: 8px; background: white; font: inherit; }
+.line { display: grid; grid-template-columns: 1fr 84px 36px; gap: 8px; align-items: end; margin-bottom: 10px; }
+
+button { border: 0; border-radius: 8px; padding: 10px 15px; background: #1d4ed8; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+button[type=submit] { width: 100%; margin-top: 16px; }
+.secondary { background: #e8eefb; color: #1d4ed8; }
+.danger { background: #fff0f0; color: #b42318; }
+.icon { background: #f1f5f9; color: #475569; padding: 9px 0; font-size: 18px; line-height: 1; }
+.link { background: none; color: #1d4ed8; padding: 4px 0; font-weight: 650; }
+
+.hint, .empty { color: #64748b; font-size: 13px; }
+.hint.warn { color: #b45309; }
+.holdlist { display: grid; gap: 12px; }
+.hold { border: 1px solid #e8edf4; border-radius: 12px; padding: 15px; }
+.hold.expired { opacity: .6; }
+.hold > .danger { margin-top: 12px; }
+.holdtop { display: flex; align-items: center; justify-content: space-between; }
+.items { margin: 10px 0; padding-left: 18px; font-size: 13px; }
+.hold small { color: #64748b; }
+.hold small.urgent { color: #b45309; font-weight: 700; }
+.confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; }
+.confirm span { flex-basis: 100%; }
+.status { font-size: 11px; border-radius: 20px; padding: 5px 8px; background: #e8f7ee; color: #177245; }
+.status.released, .status.expired { background: #f1f5f9; color: #64748b; }
+.count { font-size: 12px; background: #eff4ff; color: #1d4ed8; padding: 4px 8px; border-radius: 20px; }
+
+.alert { padding: 12px 16px; border-radius: 10px; margin: 12px 0; font-size: 14px; }
+.error { background: #fff0f0; color: #b42318; }
+.success { background: #e8f7ee; color: #177245; }
+.toast { position: fixed; top: 16px; right: 16px; z-index: 10; max-width: 360px; }
+.toast .alert { box-shadow: 0 8px 24px #1e293b1f; }
+footer { text-align: center; color: #94a3b8; font-size: 12px; padding: 14px; }
+
+@media (max-width: 760px) {
+  main { padding: 22px 14px; }
+  .columns { grid-template-columns: 1fr; }
+  h1 { font-size: 29px; }
+}

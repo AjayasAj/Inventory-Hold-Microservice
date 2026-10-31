@@ -1,0 +1,24 @@
+﻿root = true
+
+[*]
+charset = utf-8-bom
+end_of_line = crlf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+[*.cs]
+indent_size = 4
+csharp_new_line_before_members_in_chained_calls = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_prefer_braces = true:warning
+dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_property = false
+dotnet_style_qualification_for_method = false
+dotnet_style_qualification_for_event = false
+
+[*.csproj]
+indent_size = 2
+
+[*.json]
+indent_size = 2

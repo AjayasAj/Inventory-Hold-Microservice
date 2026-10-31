@@ -1,0 +1,12 @@
+﻿**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+frontend/
+.git
+.vs
+.vscode
+.idea
+*.md
+*.user
+.env
